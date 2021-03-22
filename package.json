@@ -14,7 +14,8 @@
     "dev": "cross-env NODE_ENV=development nodemon --watch src --exec babel-node src/app.js",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
-    "db:migrate": "knex migrate:latest"
+    "db:migrate": "knex migrate:latest",
+    "db:rollback": "knex migrate:rollback"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
