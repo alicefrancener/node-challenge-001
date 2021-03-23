@@ -27,6 +27,7 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "helmet": "^4.4.1",
     "knex": "^0.21.12",
     "objection": "^2.2.3",
     "pg": "^8.5.1"
