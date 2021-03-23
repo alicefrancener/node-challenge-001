@@ -1,9 +1,19 @@
 const express = require('express');
+const helmet = require('helmet');
+
+const middlewares = require('./middlewares');
 
 const app = express();
 
-app.get('*', (req,res) => {
+app.use(helmet());
+app.use(express.json());
+
+
+app.get('/', (req,res) => {
   res.send('Hello World!');
 });
 
-app.listen(process.env.PORT || '8080');
+app.use(middlewares.notFound);
+app.use(middlewares.errorHandler);
+
+app.listen(process.env.PORT || '3333');
