@@ -4,7 +4,7 @@ exports.up = (knex) => {
   return knex.schema.createTable(tableName, (table) => {
     table.increments().primary();
     table.string('name').notNullable().unique();
-    table.text('picture').notNullable();
+    table.string('picture', 2000).notNullable();
     table.timestamps(false, true);
   });
 
