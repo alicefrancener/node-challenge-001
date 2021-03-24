@@ -11,7 +11,7 @@
     "node": "12"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --watch src --exec babel-node src/app.js",
+    "dev": "cross-env NODE_ENV=development nodemon --watch src --exec babel-node src/index.js",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "db:migrate": "knex migrate:latest",
