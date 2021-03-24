@@ -4,6 +4,6 @@ const articles = require('./articles');
 
 const router = express.Router();
 
-router.use('/articles', articles);
+router.use(articles);
 
 module.exports = router;
