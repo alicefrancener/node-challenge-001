@@ -21,6 +21,7 @@ class ArticleController {
         body: article.body
       };
 
+      if(!req.user) delete article.body;
       return res.json(article);
     }
 
