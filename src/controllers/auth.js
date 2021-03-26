@@ -23,7 +23,7 @@ class AuthController {
       const user = await User.query().insert({ email, password: hashedPass });
 
       const token = await jwt.sign({ id: user.id, email });
-      res.status(201).send({ id: user.id, email, token });
+      res.status(201).send({ user: {id: user.id, email}, token });
     } catch (error) {
       if (error instanceof UniqueViolationError) {
         error.message = 'Email already registered.';
@@ -42,20 +42,20 @@ class AuthController {
     try {
       const user = await User.query().where({ email }).first();
       if (!user) {
-        const error = new Error('User is not registered.');
+        const error = new Error('Unable to login.');
         res.status(403);
         throw error;
       }
 
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
-        const error = new Error('Password incorrect.');
+        const error = new Error('Unable to login.');
         res.status(403);
         throw error;
       }
 
       const token = await jwt.sign({ id: user.id, email });
-      res.json({ id: user.id, email, token });
+      res.json({ user: {id: user.id, email}, token });
     } catch (error) {
       next(error);
     }
