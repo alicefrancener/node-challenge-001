@@ -1,8 +1,9 @@
 const { Model } = require('objection');
 
 const connection = require('./../database/');
-
 Model.knex(connection);
+
+const Author = require('./authors');
 
 class Article extends Model {
   static get tableName() {
@@ -25,6 +26,19 @@ class Article extends Model {
       },
       required: ['name', 'picture'],
       additionalPropertires: false,
+    };
+  }
+
+  static get relationMappings() {
+    return {
+      author: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Author,
+        join : {
+          from: 'article.author_id',
+          to: 'author.id'
+        }
+      }
     };
   }
 }
