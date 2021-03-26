@@ -1,14 +1,17 @@
 const express = require('express');
 const ArticleController = require('./../controllers/articles');
 
+const ensureLogin = require('./../middlewares/ensureLogin');
+const ensureLoginAdmin = require('./../middlewares/ensureLoginAdmin');
+
 const router = express.Router();
 
 const articleController = new ArticleController();
 
-router.get('/articles/:id', articleController.showById);
 router.get('/articles/', articleController.showByCategory);
+router.get('/articles/:id', ensureLogin, articleController.showById);
 
-router.get('/admin/articles', articleController.index);
+router.get('/admin/articles', ensureLoginAdmin, articleController.index);
 // TODO router.post('/admin/articles', articleController.create);
 // TODO router.put('/admin/articles', articleController.update);
 // TODO router.delete('/admin/articles', articleController.destroy);
