@@ -1,20 +1,69 @@
 const Article = require('./../models/articles');
 
 class ArticleController {
-
   async showById(req, res, next) {
     const { id } = req.params;
-    const article = await Article.query().findById(id);
+    let article = await Article.query().findById(id)
+      .join('author', 'author.id', 'article.author_id')
+      .select(
+        'article.*',
+        'author.name',
+        'author.picture'
+      );
 
-    if(article) {
+    if (article) {
+      article = {
+        author: { name: article.name, picture: article.picture },
+        category: article.category,
+        title: article.title,
+        summary: article.summary,
+        firstParagraph: article.first_paragraph,
+        body: article.body
+      };
+
       return res.json(article);
     }
 
     return next();
   }
 
+  async showByCategory(req, res, next) {
+    const { category } = req.query;
+
+    if (category) {
+      let articles = await Article.query()
+        .where('category', '=', category)
+        .join('author', 'author.id', 'article.author_id')
+        .select(
+          'article.category',
+          'article.title',
+          'article.summary',
+          'author.name',
+          'author.picture'
+        );
+
+      articles = articles.map((article) => {
+        return {
+          author: { name: article.name, picture: article.picture },
+          category: article.category,
+          title: article.title,
+          summary: article.summary,
+        };
+      });
+
+      return res.json(articles);
+    }
+
+    return next();
+  }
+
   async index(req, res) {
-    const articles = await Article.query().select('category_id', 'title', 'summary', 'first_paragraph');
+    const articles = await Article.query().select(
+      'category',
+      'title',
+      'summary',
+      'first_paragraph'
+    );
     return res.json(articles);
   }
 }
