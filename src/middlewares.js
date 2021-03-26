@@ -8,7 +8,8 @@ function errorHandler(error, req, res, next) {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode);
   res.json({
-    status: statusCode,
+    status: error.statusCode,
+    error: error.name,
     message: error.message,
   });
 }
