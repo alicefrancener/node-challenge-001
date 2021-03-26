@@ -1,7 +1,9 @@
 const express = require('express');
 const helmet = require('helmet');
 
-const middlewares = require('./middlewares');
+const notFoundHandler = require('./middlewares/notFoundHandler');
+const errorHandler = require('./middlewares/errorHandler');
+
 const api = require('./routers/index');
 
 const app = express();
@@ -11,7 +13,7 @@ app.use(express.json());
 
 app.use('/api', api);
 
-app.use(middlewares.notFound);
-app.use(middlewares.errorHandler);
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 module.exports = app;
