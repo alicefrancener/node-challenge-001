@@ -16,7 +16,9 @@
     "lint:fix": "eslint ./src --fix",
     "db:migrate": "knex migrate:latest",
     "db:rollback": "knex migrate:rollback",
-    "db:seed": "knex seed:run"
+    "db:seed": "knex seed:run",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
+    "test:coverage": "cross-env NODE_ENV=test jest --coverage"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
