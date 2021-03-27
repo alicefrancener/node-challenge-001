@@ -12,7 +12,7 @@ router.get('/articles/', articleController.showByCategory);
 router.get('/articles/:id', ensureLogin, articleController.showById);
 
 router.get('/admin/articles', ensureLoginAdmin, articleController.index);
-// TODO router.post('/admin/articles', articleController.create);
+router.post('/admin/articles', ensureLoginAdmin, articleController.create);
 // TODO router.put('/admin/articles', articleController.update);
 // TODO router.delete('/admin/articles', articleController.destroy);
 
