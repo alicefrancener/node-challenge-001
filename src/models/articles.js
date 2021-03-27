@@ -24,7 +24,7 @@ class Article extends Model {
         updated_at: { type: 'string'},
         author_id: { type: 'integer'}
       },
-      required: ['name', 'picture'],
+      required: ['title', 'category','summary','first_paragraph','body','author_id'],
       additionalPropertires: false,
     };
   }
