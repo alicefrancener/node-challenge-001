@@ -5,13 +5,10 @@ const Author = require('./../models/authors');
 class ArticleController {
   async showById(req, res, next) {
     const { id } = req.params;
-    let article = await Article.query().findById(id)
+    let article = await Article.query()
+      .findById(id)
       .join('author', 'author.id', 'article.author_id')
-      .select(
-        'article.*',
-        'author.name',
-        'author.picture'
-      );
+      .select('article.*', 'author.name', 'author.picture');
 
     if (article) {
       article = {
@@ -20,10 +17,10 @@ class ArticleController {
         title: article.title,
         summary: article.summary,
         firstParagraph: article.first_paragraph,
-        body: article.body
+        body: article.body,
       };
 
-      if(!req.user) delete article.body;
+      if (!req.user) delete article.body;
       return res.json(article);
     }
 
@@ -76,11 +73,11 @@ class ArticleController {
       const createdArticle = await Article.query().insert(article);
       res.status(201).send(createdArticle);
     } catch (error) {
-      if(error instanceof ForeignKeyViolationError) {
+      if (error instanceof ForeignKeyViolationError) {
         error.message = 'Author does not exist.';
         res.status(400);
       }
-      if(error instanceof ValidationError) {
+      if (error instanceof ValidationError) {
         res.status(400);
       }
       next(error);
