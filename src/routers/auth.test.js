@@ -54,3 +54,43 @@ describe('POST /api/sign-up', () => {
     done();
   });
 });
+
+describe('POST /api/login', () => {
+  it('should respond with a login error (user not found)', async (done) => {
+    const response = await request
+      .post('/api/login')
+      .send({
+        'email': 'usuarioDesconhecido@com.br',
+        'password': 'pass123PASS'
+      });
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe('Unable to login.');
+    done();
+  });
+
+  it('should respond with a login error (wrong password)', async (done) => {
+    const response = await request
+      .post('/api/login')
+      .send({
+        'email': 'usuario@com.br',
+        'password': 'pass123'
+      });
+    expect(response.status).toBe(403);
+    expect(response.body.message).toBe('Unable to login.');
+    done();
+  });
+
+  it('should respond with an user and token ', async (done) => {
+    const response = await request
+      .post('/api/login')
+      .send({
+        'email': 'usuario@com.br',
+        'password': 'pass123PASS'
+      });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty(['user','id']);
+    expect(response.body).toHaveProperty(['user', 'email']);
+    expect(response.body).toHaveProperty('token');
+    done();
+  });
+});
