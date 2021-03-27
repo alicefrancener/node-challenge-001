@@ -1,4 +1,6 @@
+const { ForeignKeyViolationError, ValidationError } = require('objection');
 const Article = require('./../models/articles');
+const Author = require('./../models/authors');
 
 class ArticleController {
   async showById(req, res, next) {
@@ -66,6 +68,23 @@ class ArticleController {
       'first_paragraph'
     );
     return res.json(articles);
+  }
+
+  async create(req, res, next) {
+    const { article } = req.body;
+    try {
+      const createdArticle = await Article.query().insert(article);
+      res.status(201).send(createdArticle);
+    } catch (error) {
+      if(error instanceof ForeignKeyViolationError) {
+        error.message = 'Author does not exist.';
+        res.status(400);
+      }
+      if(error instanceof ValidationError) {
+        res.status(400);
+      }
+      next(error);
+    }
   }
 }
 
