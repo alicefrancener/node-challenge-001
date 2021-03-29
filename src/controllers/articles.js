@@ -83,6 +83,18 @@ class ArticleController {
       next(error);
     }
   }
+
+  async update(req, res, next) {
+    const { id } = req.params;
+    const { article } = req.body;
+    try {
+      const updatedArticle = await Article.query().findById(id).patch(article);
+      res.status(204);
+    } catch(error) {
+      console.log(error);
+      next(error);
+    }
+  }
 }
 
 module.exports = ArticleController;
