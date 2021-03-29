@@ -13,7 +13,7 @@ router.get('/articles/:id', ensureLogin, articleController.showById);
 
 router.get('/admin/articles', ensureLoginAdmin, articleController.index);
 router.post('/admin/articles', ensureLoginAdmin, articleController.create);
-// TODO router.put('/admin/articles', articleController.update);
+router.patch('/admin/articles/:id', ensureLoginAdmin, articleController.update);
 // TODO router.delete('/admin/articles', articleController.destroy);
 
 module.exports = router;
