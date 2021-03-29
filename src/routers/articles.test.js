@@ -5,6 +5,35 @@ const request = supertest(app);
 const endpoint = '/api/articles';
 const endpointAdmin = '/api/admin/articles';
 
+let userToken;
+let adminToken;
+
+beforeAll((done) => {
+  request
+    .post('/api/login')
+    .send({
+      email: 'user@example.com',
+      password: 'pass123PASS',
+    })
+    .end((err, response) => {
+      userToken = response.body.token;
+      done();
+    });
+});
+
+beforeAll((done) => {
+  request
+    .post('/api/login')
+    .send({
+      email: 'admin@example.com',
+      password: 'pass123PASS',
+    })
+    .end((err, response) => {
+      adminToken = response.body.token;
+      done();
+    });
+});
+
 describe('GET /api/articles?category=:slug', () => {
   it('should respond with an array of articles', async (done) => {
     const response = await request.get(`${endpoint}?category=microservices`);
@@ -64,15 +93,9 @@ describe('GET /api/articles/:id', () => {
   });
 
   it('should respond with an article (with the text body of the article)', async (done) => {
-    const loginResponse = await request.post('/api/sign-up').send({
-      email: 'user02@example.com',
-      password: 'pass123PASS',
-    });
-    const token = loginResponse.body.token;
-
     const response = await request
       .get(`${endpoint}/1`)
-      .set({ Authorization: `Bearer ${token}` });
+      .set({ Authorization: `Bearer ${userToken}` });
     expect(response.body).toEqual({
       author: {
         name: 'Martin Fowler',
@@ -92,25 +115,15 @@ describe('GET /api/articles/:id', () => {
 
 describe('GET /api/admin/articles', () => {
   it('should respond with an unauthorized error', async (done) => {
-    const loginResponse = await request
-      .post('/api/login')
-      .send({ email: 'user@example.com', password: 'pass123PASS' });
-    const usertoken = loginResponse.body.token;
-
     const response = await request
       .get(endpointAdmin)
-      .set({ Authorization: `Bearer ${usertoken}` });
+      .set({ Authorization: `Bearer ${userToken}` });
     expect(response.status).toBe(401);
     expect(response.body.message).toBe('Please authenticate.');
     done();
   });
 
   it('should respond with an array of articles', async (done) => {
-    const loginResponse = await request
-      .post('/api/login')
-      .send({ email: 'admin@example.com', password: 'pass123PASS' });
-    const adminToken = loginResponse.body.token;
-
     const response = await request
       .get(endpointAdmin)
       .set({ Authorization: `Bearer ${adminToken}` });
@@ -137,77 +150,70 @@ describe('GET /api/admin/articles', () => {
 
 describe('POST /api/admin/articles', () => {
   it('should respond with a created article', async (done) => {
-    const loginResponse = await request
-      .post('/api/login')
-      .send({ email: 'admin@example.com', password: 'pass123PASS' });
-    const adminToken = loginResponse.body.token;
-
     const response = await request
       .post(endpointAdmin)
       .set({ Authorization: `Bearer ${adminToken}` })
-      .send({ article: {
-        category: 'microservices',
-        first_paragraph:
+      .send({
+        article: {
+          category: 'microservices',
+          first_paragraph:
             '<p>Infrastructure as code is the approach to defining ...</p>',
-        body: '<p>...</p>',
-        summary: 'Infrastructure As Code',
-        title: 'Infrastructure As Code',
-        author_id: 1
-      }});
+          body: '<p>...</p>',
+          summary: 'Infrastructure As Code',
+          title: 'Infrastructure As Code',
+          author_id: 1,
+        },
+      });
     expect(response.status).toBe(201);
     expect(response.body).toEqual({
       id: 3,
       category: 'microservices',
       first_paragraph:
-          '<p>Infrastructure as code is the approach to defining ...</p>',
+        '<p>Infrastructure as code is the approach to defining ...</p>',
       body: '<p>...</p>',
       summary: 'Infrastructure As Code',
       title: 'Infrastructure As Code',
-      author_id: 1
+      author_id: 1,
     });
     done();
   });
 
   it('should respond with an error: author does not exist', async (done) => {
-    const loginResponse = await request
-      .post('/api/login')
-      .send({ email: 'admin@example.com', password: 'pass123PASS' });
-    const adminToken = loginResponse.body.token;
-
     const response = await request
       .post(endpointAdmin)
       .set({ Authorization: `Bearer ${adminToken}` })
-      .send({ article: {
-        category: 'microservices',
-        first_paragraph:
+      .send({
+        article: {
+          category: 'microservices',
+          first_paragraph:
             '<p>Infrastructure as code is the approach to defining ...</p>',
-        body: '<p>...</p>',
-        summary: 'Infrastructure As Code',
-        title: 'Infrastructure As Code',
-        author_id: 100
-      }});
+          body: '<p>...</p>',
+          summary: 'Infrastructure As Code',
+          title: 'Infrastructure As Code',
+          author_id: 100,
+        },
+      });
     expect(response.status).toBe(400);
     expect(response.body.message).toBe('Author does not exist.');
     done();
   });
 
   it('should respond with an error: validation error', async (done) => {
-    const loginResponse = await request
-      .post('/api/login')
-      .send({ email: 'admin@example.com', password: 'pass123PASS' });
-    const adminToken = loginResponse.body.token;
-
     const response = await request
       .post(endpointAdmin)
       .set({ Authorization: `Bearer ${adminToken}` })
-      .send({ article: {
-        category: 'microservices',
-        summary: 'Infrastructure As Code',
-        title: 'Infrastructure As Code',
-        author_id: 1
-      }});
+      .send({
+        article: {
+          category: 'microservices',
+          summary: 'Infrastructure As Code',
+          title: 'Infrastructure As Code',
+          author_id: 1,
+        },
+      });
     expect(response.status).toBe(400);
-    expect(response.body.message).toBe('first_paragraph: is a required property, body: is a required property');
+    expect(response.body.message).toBe(
+      'first_paragraph: is a required property, body: is a required property'
+    );
     done();
   });
 });
