@@ -1,0 +1,376 @@
+---
+swagger: "2.0"
+info:
+  description: News API
+  version: 1.0.0
+  title: News API
+host: virtserver.swaggerhub.com
+basePath: /alicefng/newsApi/1.0.0
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: loggedUsers
+  description: Logged Users calls
+- name: anonymousUsers
+  description: Anonymous Users calls
+schemes:
+- https
+- http
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /articles:
+    get:
+      tags:
+      - anonymousUsers
+      - loggedUsers
+      summary: list all articles for a given category
+      description: Get a list of all registered articles by category
+      parameters:
+      - name: category
+        in: query
+        description: The name of the category
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Array of articles for a given category
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ArticleByCategory'
+        "400":
+          description: Category is required.
+          schema:
+            $ref: '#/definitions/Error'
+  /articles/{id}:
+    get:
+      tags:
+      - anonymousUsers
+      - loggedUsers
+      summary: get information of an article
+      description: Get information of a given article
+      parameters:
+      - name: id
+        in: path
+        description: Article ID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Article details
+          schema:
+            type: object
+        "404":
+          description: Article not found.
+          schema:
+            $ref: '#/definitions/Error'
+  /admin/articles:
+    get:
+      tags:
+      - admins
+      summary: list all articles
+      description: Get a list of all registered articles
+      parameters: []
+      responses:
+        "200":
+          description: Array of articles
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Article'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - bearerAuth: []
+    post:
+      tags:
+      - admins
+      summary: create a new article
+      description: Create a new article
+      parameters:
+      - in: body
+        name: article
+        required: true
+        schema:
+          $ref: '#/definitions/ArticleInBody'
+      responses:
+        "201":
+          description: Article Created
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Article'
+        "400":
+          description: Author does not exist || Validation error
+          schema:
+            $ref: '#/definitions/Error'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - bearerAuth: []
+  /admin/articles/{id}:
+    delete:
+      tags:
+      - admins
+      summary: delete an article
+      description: Delete an article
+      parameters:
+      - name: id
+        in: path
+        description: Article ID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: Article Deleted
+        "400":
+          description: Article does not exist
+          schema:
+            $ref: '#/definitions/Error'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - bearerAuth: []
+    patch:
+      tags:
+      - admins
+      summary: update an article
+      description: Update an article
+      parameters:
+      - in: body
+        name: article
+        required: true
+        schema:
+          $ref: '#/definitions/ArticleInBody'
+      - name: id
+        in: path
+        description: Article ID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: Article Updated
+        "400":
+          description: Article does not exist
+          schema:
+            $ref: '#/definitions/Error'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - bearerAuth: []
+  /admin/authors:
+    get:
+      tags:
+      - admins
+      summary: list all authors
+      description: Get a list of all registered authors
+      parameters: []
+      responses:
+        "200":
+          description: Array of authors
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Author'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - bearerAuth: []
+    post:
+      tags:
+      - admins
+      summary: create a new author
+      description: Create a new author
+      parameters:
+      - in: body
+        name: author
+        required: true
+        schema:
+          $ref: '#/definitions/Author'
+      responses:
+        "201":
+          description: Author Created
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Author'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/Error'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - bearerAuth: []
+  /admin/authors/{id}:
+    get:
+      tags:
+      - admins
+      summary: get information of an author
+      description: Get information of a given author
+      parameters:
+      - name: id
+        in: path
+        description: Author ID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Author details
+          schema:
+            type: object
+        "404":
+          description: Author not found.
+          schema:
+            $ref: '#/definitions/Error'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - admins
+      summary: delete an author
+      description: Delete an author
+      parameters:
+      - name: id
+        in: path
+        description: Author ID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: Author Deleted
+        "400":
+          description: Author does not exist
+          schema:
+            $ref: '#/definitions/Error'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - bearerAuth: []
+    patch:
+      tags:
+      - admins
+      summary: update an author
+      description: Update an author
+      parameters:
+      - in: body
+        name: author
+        required: true
+        schema:
+          $ref: '#/definitions/Author'
+      - name: id
+        in: path
+        description: Author ID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: Author Updated
+        "400":
+          description: Author does not exist
+          schema:
+            $ref: '#/definitions/Error'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - bearerAuth: []
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+definitions:
+  Article:
+    required:
+    - author
+    - body
+    - category
+    - firstParagraph
+    - summary
+    - title
+    properties:
+      author:
+        $ref: '#/definitions/Author'
+      category:
+        type: string
+      title:
+        type: string
+      summary:
+        type: string
+      firstParagraph:
+        type: string
+      body:
+        type: string
+  ArticleByCategory:
+    required:
+    - author
+    - category
+    - summary
+    - title
+    properties:
+      author:
+        $ref: '#/definitions/Author'
+      category:
+        type: string
+      title:
+        type: string
+      summary:
+        type: string
+  ArticleInBody:
+    properties:
+      category:
+        type: string
+      first_paragraph:
+        type: string
+      body:
+        type: string
+      summary:
+        type: string
+      title:
+        type: string
+      author_id:
+        type: integer
+  Author:
+    required:
+    - name
+    - picture
+    properties:
+      name:
+        type: string
+      picture:
+        type: string
+        format: url
+  Error:
+    type: object
+    required:
+    - code
+    - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
