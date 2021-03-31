@@ -154,13 +154,13 @@ describe('POST /api/admin/articles', () => {
       .post(endpointAdmin)
       .set({ Authorization: `Bearer ${adminToken}` })
       .send({
-          category: 'microservices',
-          first_paragraph:
+        category: 'microservices',
+        first_paragraph:
             '<p>Infrastructure as code is the approach to defining ...</p>',
-          body: '<p>...</p>',
-          summary: 'Infrastructure As Code',
-          title: 'Infrastructure As Code',
-          author_id: 1,
+        body: '<p>...</p>',
+        summary: 'Infrastructure As Code',
+        title: 'Infrastructure As Code',
+        author_id: 1,
       });
     expect(response.status).toBe(201);
     expect(response.body).toEqual({
@@ -181,13 +181,13 @@ describe('POST /api/admin/articles', () => {
       .post(endpointAdmin)
       .set({ Authorization: `Bearer ${adminToken}` })
       .send({
-          category: 'microservices',
-          first_paragraph:
+        category: 'microservices',
+        first_paragraph:
             '<p>Infrastructure as code is the approach to defining ...</p>',
-          body: '<p>...</p>',
-          summary: 'Infrastructure As Code',
-          title: 'Infrastructure As Code',
-          author_id: 100,
+        body: '<p>...</p>',
+        summary: 'Infrastructure As Code',
+        title: 'Infrastructure As Code',
+        author_id: 100,
       });
     expect(response.status).toBe(400);
     expect(response.body.message).toBe('Author does not exist.');
@@ -199,10 +199,10 @@ describe('POST /api/admin/articles', () => {
       .post(endpointAdmin)
       .set({ Authorization: `Bearer ${adminToken}` })
       .send({
-          category: 'microservices',
-          summary: 'Infrastructure As Code',
-          title: 'Infrastructure As Code',
-          author_id: 1,
+        category: 'microservices',
+        summary: 'Infrastructure As Code',
+        title: 'Infrastructure As Code',
+        author_id: 1,
       });
     expect(response.status).toBe(400);
     expect(response.body.message).toBe(
