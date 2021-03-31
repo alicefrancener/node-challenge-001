@@ -1,3 +1,20 @@
+# Jungle Devs - Solution
+
+## Project description
+The architecture of this project consists of a REST API for registering and reading articles from authors. The components architecture is represented in the following diagram:
+
+![Architecture](diagrams/architecture.png)
+
+The Database contains three tables: author, article, user. 
+
+![Database schema](diagrams/database-schema.png)
+
+The API documentation can be viewed at:
+- [API schema](api-schema.yaml)
+- [API schema hosted online at SwaggerHub](https://app.swaggerhub.com/apis/alicefng/newsApi/1.0.0)
+
+Some endpoints are public, while other are private (admins or logged users can access).
+
 # Jungle Devs - Node Challenge #001
 
 ## Description
