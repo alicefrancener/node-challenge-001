@@ -154,7 +154,6 @@ describe('POST /api/admin/articles', () => {
       .post(endpointAdmin)
       .set({ Authorization: `Bearer ${adminToken}` })
       .send({
-        article: {
           category: 'microservices',
           first_paragraph:
             '<p>Infrastructure as code is the approach to defining ...</p>',
@@ -162,7 +161,6 @@ describe('POST /api/admin/articles', () => {
           summary: 'Infrastructure As Code',
           title: 'Infrastructure As Code',
           author_id: 1,
-        },
       });
     expect(response.status).toBe(201);
     expect(response.body).toEqual({
@@ -183,7 +181,6 @@ describe('POST /api/admin/articles', () => {
       .post(endpointAdmin)
       .set({ Authorization: `Bearer ${adminToken}` })
       .send({
-        article: {
           category: 'microservices',
           first_paragraph:
             '<p>Infrastructure as code is the approach to defining ...</p>',
@@ -191,7 +188,6 @@ describe('POST /api/admin/articles', () => {
           summary: 'Infrastructure As Code',
           title: 'Infrastructure As Code',
           author_id: 100,
-        },
       });
     expect(response.status).toBe(400);
     expect(response.body.message).toBe('Author does not exist.');
@@ -203,17 +199,55 @@ describe('POST /api/admin/articles', () => {
       .post(endpointAdmin)
       .set({ Authorization: `Bearer ${adminToken}` })
       .send({
-        article: {
           category: 'microservices',
           summary: 'Infrastructure As Code',
           title: 'Infrastructure As Code',
           author_id: 1,
-        },
       });
     expect(response.status).toBe(400);
     expect(response.body.message).toBe(
       'first_paragraph: is a required property, body: is a required property'
     );
+    done();
+  });
+});
+
+describe('PATCH /api/admin/articles/:id', () => {
+  it('should update a given article', async (done) => {
+    const response = await request
+      .patch(`${endpointAdmin}/1`)
+      .set({ Authorization: `Bearer ${adminToken}` })
+      .send({category: 'devops' });
+    expect(response.status).toBe(204);
+    done();
+  });
+
+  it('should respond with an error', async (done) => {
+    const response = await request
+      .patch(`${endpointAdmin}/100`)
+      .set({ Authorization: `Bearer ${adminToken}` })
+      .send({ category: 'devops' });
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('Article does not exist.');
+    done();
+  });
+});
+
+describe('DELETE /api/admin/articles/:id', () => {
+  it('should delete a given article', async (done) => {
+    const response = await request
+      .delete(`${endpointAdmin}/3`)
+      .set({ Authorization: `Bearer ${adminToken}` });
+    expect(response.status).toBe(204);
+    done();
+  });
+
+  it('should respond with an error', async (done) => {
+    const response = await request
+      .delete(`${endpointAdmin}/100`)
+      .set({ Authorization: `Bearer ${adminToken}` });
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('Article does not exist.');
     done();
   });
 });
