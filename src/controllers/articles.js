@@ -68,7 +68,7 @@ class ArticleController {
   }
 
   async create(req, res, next) {
-    const { article } = req.body;
+    const article = req.body;
     try {
       const createdArticle = await Article.query().insert(article);
       res.status(201).send(createdArticle);
@@ -86,10 +86,35 @@ class ArticleController {
 
   async update(req, res, next) {
     const { id } = req.params;
-    const { article } = req.body;
+    const article = req.body;
     try {
       const updatedArticle = await Article.query().findById(id).patch(article);
-      res.status(204);
+      if(!updatedArticle) {
+        const message = 'Article does not exist.';
+        const error = new Error();
+        error.message = message;
+        res.status(400);
+        throw error;
+      }
+      res.sendStatus(204);
+    } catch(error) {
+      next(error);
+    }
+  }
+
+  async destroy(req, res, next) {
+    const {id} = req.params;
+    try {
+      const deletedArticle = await Article.query().deleteById(id);
+      if(!deletedArticle) {
+        const message = 'Article does not exist.';
+        const error = new Error();
+        error.message = message;
+        res.status(400);
+        throw error;
+      }
+
+      res.sendStatus(204);
     } catch(error) {
       console.log(error);
       next(error);
