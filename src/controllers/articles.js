@@ -27,8 +27,14 @@ class ArticleController {
 
   async showByCategory(req, res, next) {
     const { category } = req.query;
+    try {
+      if (!category) {
+        const message = 'Category is required.';
+        const error = new Error(message);
+        res.status(400);
+        throw(error);
+      }
 
-    if (category) {
       let articles = await Article.query()
         .where('category', '=', category)
         .join('author', 'author.id', 'article.author_id')
@@ -50,18 +56,27 @@ class ArticleController {
       });
 
       return res.json(articles);
+    } catch(error) {
+      return next(error);
     }
-
-    return next();
   }
 
   async index(req, res) {
-    const articles = await Article.query().select(
-      'category',
-      'title',
-      'summary',
-      'first_paragraph'
-    );
+    let articles = await Article
+      .query()
+      .join('author', 'author.id', 'article.author_id')
+      .select('article.*', 'author.name', 'author.picture');
+
+    articles = articles.map((article) => {
+      return {
+        author: { name: article.name, picture: article.picture },
+        category: article.category,
+        title: article.title,
+        summary: article.summary,
+        firstParagraph: article.first_paragraph,
+        body: article.body,
+      };
+    });
     return res.json(articles);
   }
 
