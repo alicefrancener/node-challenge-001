@@ -2,11 +2,24 @@ const { ValidationError } = require('objection');
 const Author = require('../models/authors');
 
 class AuthorController {
-  async show(req, res ) {
+  async show(req, res, next) {
     const { id } = req.params;
-    const author = await Author.query().findById(id).select('name', 'picture');
+    try {
+      const author = await Author.query()
+        .findById(id)
+        .select('name', 'picture');
 
-    return res.json(author);
+      if (!author) {
+        const message = 'Author not found.';
+        const error = new Error();
+        error.message = message;
+        res.status(404);
+        throw error;
+      }
+      res.json(author);
+    } catch (error) {
+      next(error);
+    }
   }
 
   async index(req, res) {
@@ -32,7 +45,7 @@ class AuthorController {
     const author = req.body;
     try {
       const updatedAuthor = await Author.query().findById(id).patch(author);
-      if(!updatedAuthor) {
+      if (!updatedAuthor) {
         const message = 'Author does not exist.';
         const error = new Error();
         error.message = message;
@@ -49,7 +62,7 @@ class AuthorController {
     const { id } = req.params;
     try {
       const deletedAuthor = await Author.query().deleteById(id);
-      if(!deletedAuthor) {
+      if (!deletedAuthor) {
         const message = 'Author does not exist.';
         const error = new Error();
         error.message = message;
