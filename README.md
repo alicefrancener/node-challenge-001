@@ -15,6 +15,24 @@ The API documentation can be viewed at:
 
 Some endpoints are public, while other are private (admins or logged users can access).
 
+## Instructions
+
+- This project uses Node.js v12.20.0, yarn, and Docker Compose.
+
+- Clone the repository: `https://github.com/alicefrancener/node-challenge-001` 
+- Change the `.env.example` to `.env` and update the environment varibles in production
+- Install dependencies: `yarn`
+- Run docker compose: `sudo docker-compose up`
+  - Database will run by default at port: 5432
+  - Database Adminer will run by default at port: 8080
+    - To access adminer, use the same variables defined in `docker-compose.yml` for the database
+- Start application: `yarn dev`
+  - Application will run by default at port: 3333
+- Run database migrations: `yarn db:migrate`
+- [optional] Seed the database: `yarn db:seed`
+- [optional] Run tests: `yarn test`
+- [optional] Run tests with coverage: `yarn test:coverage` (the coverage reports will be placed in a directory called `/coverage`)
+
 # Jungle Devs - Node Challenge #001
 
 ## Description
