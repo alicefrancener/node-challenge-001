@@ -59,10 +59,10 @@ describe('GET /api/articles?category=:slug', () => {
     done();
   });
 
-  it('shoud respond with a not found error', async (done) => {
+  it('shoud respond with an error', async (done) => {
     const response = await request.get(`${endpoint}?category=`);
-    expect(response.status).toBe(404);
-    expect(response.body.message).toBe('Not found: /api/articles?category=');
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('Category is required.');
     done();
   });
 });
@@ -129,19 +129,27 @@ describe('GET /api/admin/articles', () => {
       .set({ Authorization: `Bearer ${adminToken}` });
     expect(response.status).toBe(200);
     expect(response.body).toEqual([
-      {
-        category: 'microservices',
-        first_paragraph:
-          '<p>As I hear stories about teams using a microservices architecture, I\'ve noticed a common pattern.</p>',
-        summary: 'Why you shouldn\'t start a new project with microservices',
-        title: 'Monolith First',
+      { author: {
+        name: 'Martin Fowler',
+        picture: 'https://martinfowler.com/mf.jpg',
       },
-      {
-        category: 'productivity',
-        first_paragraph:
+      body: '<p>1. Almost all the successful microservice stories have started with a monolith that got too big and was broken up.</p> <p>Almost all the cases where I\'ve heard of a system that was built as a microservice system from scratch, it has ended up in serious trouble.</p>',
+      category: 'microservices',
+      firstParagraph:
+          '<p>As I hear stories about teams using a microservices architecture, I\'ve noticed a common pattern.</p>',
+      summary: 'Why you shouldn\'t start a new project with microservices',
+      title: 'Monolith First',
+      },
+      {author: {
+        name: 'Tania Rascia',
+        picture: 'https://www.taniarascia.com/static/tania2020small-2e26928e592931dfb9698970daff8edc.jpg',
+      },
+      body: '<p>The former basically says, "don\'t worry about trying to set up the perfect system; nothing will ever be perfect, so just relax and get used to chaos, and try to put all your focus on one thing at a time". The latter says, "set up self-imposed personal rules, because your quality of life will improve when your standards are clear".</p>',
+      category: 'productivity',
+      firstParagraph:
           '<p>At some point in my life, I read A Case Against Optimizing Your Life , and I took it to heart, and I lived by it. Now I think Wise People Have Rules For Themselves is the right approach for me.</p>',
-        summary: 'Systems that improves everyday life',
-        title: 'Everyday Systems That Help Me',
+      summary: 'Systems that improves everyday life',
+      title: 'Everyday Systems That Help Me',
       },
     ]);
     done();
