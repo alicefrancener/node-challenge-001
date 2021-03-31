@@ -11,7 +11,7 @@ The Database contains three tables: author, article, user.
 
 The API documentation can be viewed at:
 - [API schema](api-schema.yaml)
-- [API schema hosted online at SwaggerHub](https://app.swaggerhub.com/apis/alicefng/newsApi/1.0.0)
+- [API schema - hosted at SwaggerHub](https://app.swaggerhub.com/apis/alicefng/newsApi/1.0.0)
 
 Some endpoints are public, while other are private (admins or logged users can access).
 
@@ -19,7 +19,8 @@ Some endpoints are public, while other are private (admins or logged users can a
 
 - This project uses Node.js v12.20.0, yarn, and Docker Compose.
 
-- Clone the repository: `https://github.com/alicefrancener/node-challenge-001` 
+
+- Clone the repository: `git clone https://github.com/alicefrancener/node-challenge-001` 
 - Change the `.env.example` to `.env` and update the environment varibles in production
 - Install dependencies: `yarn`
 - Run docker compose: `sudo docker-compose up`
