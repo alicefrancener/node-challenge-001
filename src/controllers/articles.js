@@ -1,7 +1,5 @@
 const { ForeignKeyViolationError, ValidationError } = require('objection');
 const Article = require('./../models/articles');
-const Author = require('./../models/authors');
-
 class ArticleController {
   async showById(req, res, next) {
     const { id } = req.params;
@@ -116,7 +114,6 @@ class ArticleController {
 
       res.sendStatus(204);
     } catch(error) {
-      console.log(error);
       next(error);
     }
   }
